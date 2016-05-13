@@ -21,8 +21,3 @@ app.use('/api', songRouter);
 app.use('/api', queryRouter);
 
 app.listen(PORT, () => console.log('Server listening on port:' + PORT));
-/*
-express().use(express.static(__dirname + '/build')).listen(5000, () => {
-  console.log('Client server on port 5000');
-});
-*/

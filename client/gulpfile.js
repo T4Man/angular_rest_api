@@ -8,7 +8,7 @@ const mocha = require('gulp-mocha');
 const files = ['**/*.js', '!node_modules/**'];
 
 gulp.task('webpack:dev', () => {
-  gulp.src('app/js/entry.js')
+  gulp.src(['app/js/entry.js', 'app/js/script.js'])
     .pipe(webpack( {
       output: {
         filename: 'bundle.js'

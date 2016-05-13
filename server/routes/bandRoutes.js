@@ -31,7 +31,7 @@ bandRouter.put('/bands/:id', bodyParser, (req, res) => {
 });
 
 bandRouter.delete('/bands/:id', (req, res) => {
-  Band.remove({ _id: req.params.band }, (err) => {
+  Band.remove({ _id: req.params.id }, (err) => {
     if (err) return serverErrorHandler(err, res);
     res.status(200).json({ msg: 'band delete complete' });
   });
