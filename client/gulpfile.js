@@ -34,12 +34,12 @@ gulp.task('static:dev', () => {
 
 gulp.task('webdriverUpdate', webdriverUpdate);
 
-gulp.task('mongoDb:test', (done) => {
+gulp.task('mongoDB:test', (done) => {
   children.push(cp.spawn('mongod'));
   setTimeout(done, 1000);
 });
 
-gulp.task('dropDb:test', ['mongoDb:test'], (done) => {
+gulp.task('dropDb:test', ['mongoDB:test'], (done) => {
   mongoose.connect(mongoUri, () => {
     mongoose.connection.db.dropDatabase(() => {
       mongoose.disconnect(done);
