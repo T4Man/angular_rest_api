@@ -16,7 +16,7 @@ angularApp.controller('BandsController', ['$http', function($http) {
     $http.get(baseUrl + '/api/bands')
       .then((res) => {
         this.bands = res.data;
-      },handleError.bind(this));
+      }, handleError.bind(this));
   };
 
   this.createBand = () => {
@@ -63,7 +63,7 @@ angularApp.controller('SongsController', ['$http', function($http) {
     $http.get(baseUrl + '/api/songs')
       .then((res) => {
         this.songs = res.data;
-      },handleError.bind(this));
+      }, handleError.bind(this));
   };
 
   this.createSong = () => {
