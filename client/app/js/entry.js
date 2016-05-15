@@ -8,12 +8,15 @@ var handleError = function(error) {
 };
 
 angularApp.controller('BandsController', ['$http', function($http) {
+
   this.bands = [];
+  var original = {};
+
   this.getAll = () => {
     $http.get(baseUrl + '/api/bands')
       .then((res) => {
         this.bands = res.data;
-    },  handleError.bind(this));
+      },handleError.bind(this));
   };
 
   this.createBand = () => {
@@ -37,15 +40,30 @@ angularApp.controller('BandsController', ['$http', function($http) {
         this.bands.splice(this.bands.indexOf(band), 1);
       }, handleError.bind(this));
   };
+
+  this.cancel = (band) => {
+    band.editing = false;
+    band.bandName = original.bandName;
+    band.genre = original.genre;
+  };
+
+  this.edit = (band) => {
+    band.editing = true;
+    original.bandName = band.bandName;
+    original.genre = band.genre;
+  };
+
 }]);
 
 angularApp.controller('SongsController', ['$http', function($http) {
   this.songs = [];
+  var original = {};
+
   this.getAll = () => {
     $http.get(baseUrl + '/api/songs')
       .then((res) => {
         this.songs = res.data;
-    },  handleError.bind(this));
+      },handleError.bind(this));
   };
 
   this.createSong = () => {
@@ -69,4 +87,17 @@ angularApp.controller('SongsController', ['$http', function($http) {
         this.songs.splice(this.songs.indexOf(song), 1);
       }, handleError.bind(this));
   };
+
+  this.cancel = (song) => {
+    song.editing = false;
+    song.title = original.title;
+    song.bandName = original.bandName;
+  };
+
+  this.edit = (song) => {
+    song.editing = true;
+    original.title = song.title;
+    original.bandName = song.bandName;
+  };
+
 }]);

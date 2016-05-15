@@ -34,10 +34,10 @@
             <input type="text" name="genre" data-ng-model="band.genre">
 
             <button type="submit">Update Band</button>
-            <button data-ng-click="cancel()">Clear</button>
+            <button data-ng-click="bandsctrl.cancel(band)">Clear</button>
           </form>
 
-          <button data-ng-if="!band.editing" data-ng-click="edit()">Edit</button>
+          <button data-ng-if="!band.editing" data-ng-click="bandsctrl.edit(band)">Edit</button>
           <button data-ng-click="bandsctrl.removeBand(band)">Remove This Band</button>
         </li>
       </ul>
@@ -65,10 +65,10 @@
             <input type="text" name="bandName" data-ng-model="song.bandName">
 
             <button type="submit">Update Song</button>
-            <button data-ng-click="song.editing = false">Clear</button>
+            <button data-ng-click="songsctrl.cancel(song)">Clear</button>
           </form>
 
-          <button data-ng-if="!song.editing" data-ng-click="song.editing = true">Edit</button>
+          <button data-ng-if="!song.editing" data-ng-click="songsctrl.edit(song)">Edit</button>
           <button data-ng-click="songsctrl.removeSong(song)">Remove This Song</button>
         </li>
       </ul>

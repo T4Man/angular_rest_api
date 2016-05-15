@@ -3,12 +3,11 @@
 const gulp = require('gulp');
 const webpack = require('webpack-stream');
 const eslint = require('gulp-eslint');
-const mocha = require('gulp-mocha');
 
-const files = ['**/*.js', '!node_modules/**'];
+const files = ['**/*.js', '!node_modules/**', '!build/**'];
 
 gulp.task('webpack:dev', () => {
-  gulp.src(['app/js/entry.js', 'app/js/script.js'])
+  gulp.src('app/js/entry.js')
     .pipe(webpack( {
       output: {
         filename: 'bundle.js'
@@ -36,4 +35,4 @@ gulp.task('lint:nontest', () => {
 
 gulp.task('build:dev', ['webpack:dev', 'static:dev']);
 gulp.task('lint', ['lint:test', 'lint:nontest']);
-gulp.task('default', ['build:dev']);
+gulp.task('default', ['build:dev', 'lint']);

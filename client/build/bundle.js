@@ -44,15 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
-	module.exports = __webpack_require__(4);
-
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const angular = __webpack_require__(2);
+	const angular = __webpack_require__(1);
 	const angularApp = angular.module('angularApp', []);
 	const baseUrl = 'http://localhost:3000';
 
@@ -62,12 +54,15 @@
 	};
 
 	angularApp.controller('BandsController', ['$http', function($http) {
+
 	  this.bands = [];
+	  var original = {};
+
 	  this.getAll = () => {
 	    $http.get(baseUrl + '/api/bands')
 	      .then((res) => {
 	        this.bands = res.data;
-	    },  handleError.bind(this));
+	      },handleError.bind(this));
 	  };
 
 	  this.createBand = () => {
@@ -91,15 +86,30 @@
 	        this.bands.splice(this.bands.indexOf(band), 1);
 	      }, handleError.bind(this));
 	  };
+
+	  this.cancel = (band) => {
+	    band.editing = false;
+	    band.bandName = original.bandName;
+	    band.genre = original.genre;
+	  };
+
+	  this.edit = (band) => {
+	    band.editing = true;
+	    original.bandName = band.bandName;
+	    original.genre = band.genre;
+	  };
+
 	}]);
 
 	angularApp.controller('SongsController', ['$http', function($http) {
 	  this.songs = [];
+	  var original = {};
+
 	  this.getAll = () => {
 	    $http.get(baseUrl + '/api/songs')
 	      .then((res) => {
 	        this.songs = res.data;
-	    },  handleError.bind(this));
+	      },handleError.bind(this));
 	  };
 
 	  this.createSong = () => {
@@ -123,19 +133,32 @@
 	        this.songs.splice(this.songs.indexOf(song), 1);
 	      }, handleError.bind(this));
 	  };
+
+	  this.cancel = (song) => {
+	    song.editing = false;
+	    song.title = original.title;
+	    song.bandName = original.bandName;
+	  };
+
+	  this.edit = (song) => {
+	    song.editing = true;
+	    original.title = song.title;
+	    original.bandName = song.bandName;
+	  };
+
 	}]);
 
 
 /***/ },
-/* 2 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(3);
+	__webpack_require__(2);
 	module.exports = angular;
 
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports) {
 
 	/**
@@ -31006,21 +31029,6 @@
 	})(window);
 
 	!window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	$scope.edit = function () {
-	    $scope.editing = true;
-	    $scope.copy = angular.copy($scope.data);
-	};
-
-	$scope.cancel = function () {
-	    $scope.editing = false;
-	    $scope.data = $scope.copy;
-	};
-
 
 /***/ }
 /******/ ]);
