@@ -49,7 +49,7 @@ gulp.task('dropDb:test', ['mongoDB:test'], (done) => {
 
 gulp.task('startservers:test', ['dropDb:test'], (done) => {
   children.push(cp.fork('server.js'));
-  children.push(cp.fork('../server/server.js', [], { env: { MONGO_URI: mongoUri } } ));
+  children.push(cp.fork('../server/server.js', [], { env: { MONGODB_URI: mongoUri } } ));
   setTimeout(done, 1000);
 });
 
