@@ -6,8 +6,10 @@ const webpack = require('webpack-stream');
 const eslint = require('gulp-eslint');
 const mongoose = require('mongoose');
 const mongoUri = 'mongodb://localhost/bands_test';
-const files = ['**/*.js', '!node_modules/**', '!build/**', '!**/*spec.js'];
 
+var lintFiles = ['**/*.js', '!node_modules/**', '!build/**', '!**/*spec.js',
+'!**/bundle.**', '!*.conf.js'];
+var statFiles = ['app/**/*.html', 'app/**/*.css'];
 var children = [];
 
 function killcp() {
@@ -39,7 +41,7 @@ gulp.task('webpack:test', () => {
 });
 
 gulp.task('static:dev', () => {
-  gulp.src(['app/**/*.html', 'app/**/*.css'])
+  gulp.src(statFiles)
     .pipe(gulp.dest('./build'));
 });
 
@@ -77,19 +79,13 @@ gulp.task('protractor:test', ['build:dev', 'webdriverUpdate', 'startservers:test
     });
 });
 
-gulp.task('lint:test', () => {
-  return gulp.src('./test/*.js')
-    .pipe(eslint())
-    .pipe(eslint.format());
-});
-
-gulp.task('lint:nontest', () => {
-  return gulp.src(files)
+gulp.task('lint:dev', () => {
+  return gulp.src(lintFiles)
   .pipe(eslint())
   .pipe(eslint.format());
 });
 
 gulp.task('test', ['protractor:test']);
-gulp.task('build:dev', ['webpack:dev', 'static:dev']);
-gulp.task('lint', ['lint:test', 'lint:nontest']);
+gulp.task('build:dev', ['webpack:dev', 'static:dev', 'webpack:test']);
+gulp.task('lint', ['lint:dev']);
 gulp.task('default', ['build:dev', 'lint', 'test']);

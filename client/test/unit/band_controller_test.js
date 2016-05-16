@@ -1,35 +1,35 @@
 var angular = require('angular');
 require('angular-mocks');
 
-describe('bands controller', function() {
+describe('bands controller', () => {
   var $controller;
 
   beforeEach(angular.mock.module('angularApp'));
 
-  beforeEach(angular.mock.inject(function(_$controller_) {
+  beforeEach(angular.mock.inject((_$controller_) => {
     $controller = _$controller_;
   }));
 
-  it('should be a controller', function() {
+  it('should be a controller', () => {
     var bandsctrl = $controller('BandsController');
     expect(typeof bandsctrl).toBe('object');
     expect(typeof bandsctrl.getAll).toBe('function');
   });
 
-  describe('REST functionality', function() {
+  describe('REST operations', () => {
     var $httpBackend;
     var bandsctrl;
-    beforeEach(angular.mock.inject(function(_$httpBackend_) {
+    beforeEach(angular.mock.inject((_$httpBackend_) => {
       $httpBackend = _$httpBackend_;
       bandsctrl = $controller('BandsController');
     }));
 
-    afterEach(function() {
+    afterEach(() => {
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should send a GET to retrieve bands', function() {
+    it('should send a GET to retrieve bands', () => {
       $httpBackend.expectGET('http://localhost:3000/api/bands').respond(200, [{
         name: 'test band'
       }]);
@@ -39,7 +39,7 @@ describe('bands controller', function() {
       expect(bandsctrl.bands[0].name).toBe('test band');
     });
 
-    it('should add a band', function() {
+    it('should add a band', () => {
       $httpBackend.expectPOST('http://localhost:3000/api/bands', {
         name: 'Muse'
       }).respond(200, {
@@ -55,7 +55,7 @@ describe('bands controller', function() {
       expect(bandsctrl.newBand).toBe(null);
     });
 
-    it('should update a band', function() {
+    it('should update a band', () => {
       $httpBackend.expectPUT('http://localhost:3000/api/bands/1', {
         name: 'update band',
         editing: true,
@@ -73,7 +73,7 @@ describe('bands controller', function() {
       expect(bandsctrl.bands[0].editing).toBe(false);
     });
 
-    it('should delete a band', function() {
+    it('should delete a band', () => {
       $httpBackend.expectDELETE('http://localhost:3000/api/bands/1').respond(200);
       bandsctrl.bands = [{
         name: 'Muse',

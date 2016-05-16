@@ -3,7 +3,7 @@
 
 ##To start this application
 
-1. Open and terminal window and type 'mongod' to start MongoDB
+1. Open a terminal window and type 'mongod' to start MongoDB
 2. Open a second terminal window, navigate to the client folder and type 'gulp'.
 3. When gulp has completed type 'node server.js' to start the client-side server.
 3. Open a third terminal window, navigate to the server folder and type

@@ -9,7 +9,8 @@
       "__dirname": true,
       "module": true,
       "process": true,
-      "exports": true
+      "exports": true,
+      "expect": true
     },
     "rules": {
       "indent": ["error", 2],
