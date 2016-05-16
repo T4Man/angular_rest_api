@@ -81,4 +81,4 @@ gulp.task('lint:nontest', () => {
 gulp.task('test', ['protractor:test']);
 gulp.task('build:dev', ['webpack:dev', 'static:dev']);
 gulp.task('lint', ['lint:test', 'lint:nontest']);
-gulp.task('default', ['build:dev', 'lint']);
+gulp.task('default', ['build:dev', 'lint', 'test']);
