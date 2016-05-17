@@ -22,7 +22,7 @@ Adding a new band or new song will make a POST request and add a document in Mon
 If you change your mind during an edit and click the 'clear' button before clicking
 the 'update' button the document and the list item will not be changed.
 
-##For testing only without manually starting servers.
+##For testing only without manually starting servers or browser.
 
 ###For all tests (includes end to end and linter)
 
@@ -32,4 +32,4 @@ the 'update' button the document and the list item will not be changed.
 ###For end to end testing only
 
 1. Navigate to the client folder and type 'gulp protractor:test'.
-2. When all tests complete, press 'control C' to close the Selenium server. 
+2. When all tests complete, press 'control C' to close the Selenium server.
