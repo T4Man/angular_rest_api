@@ -1,7 +1,7 @@
 #Angular Two Resource REST API
 ##Assignment for Code Fellows 401
 
-##To start this application(requires Chrome browser for the tests to run).
+##To start this application
 
 1. Open a terminal window and type 'mongod' to start MongoDB
 2. Open a second terminal window, navigate to the client folder and type 'gulp'.
@@ -21,18 +21,3 @@ back-end servers.
 Adding a new band or new song will make a POST request and add a document in MongoDB. Edit will make a PUT request to modify the document. "Remove this band" and "Remove this song" will make a DELETE request and the document will be removed from MongoDB.
 If you change your mind during an edit and click the 'clear' button before clicking
 the 'update' button the document and the list item will not be changed.
-
-##For testing only without manually starting servers or browser
-###You must have Chrome browser for the tests to run.
-
-###For all test (includes end to end, unit and linter)
-1. Navigate to the client folder and type 'gulp'.
-2. When all tests complete, press 'control C' to close the Selenium server.
-
-###For end to end testing only
-1. Navigate to the client folder and type 'gulp protractor:test'.
-2. When all tests complete, press 'control C' to close the Selenium server.
-
-###For unit testing only
-1. Navigate to the client folder and type 'gulp webpack:karma'.
-2. Enter 'karma start'.
