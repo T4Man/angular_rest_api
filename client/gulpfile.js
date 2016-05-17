@@ -1,13 +1,14 @@
 const gulp = require('gulp');
 const protractor = require('gulp-protractor').protractor;
-const webdriverUpdate = require('gulp-protractor').webdriver_update;
 const cp = require('child_process');
 const webpack = require('webpack-stream');
 const eslint = require('gulp-eslint');
 const mongoose = require('mongoose');
 const mongoUri = 'mongodb://localhost/bands_test';
-const files = ['**/*.js', '!node_modules/**', '!build/**', '!**/*spec.js'];
 
+var lintFiles = ['**/*.js', '!node_modules/**', '!build/**', '!**/*spec.js',
+'!test/**bundle.**', '!*.conf.js'];
+var statFiles = ['app/**/*.html', 'app/**/*.css'];
 var children = [];
 
 function killcp() {
@@ -27,12 +28,21 @@ gulp.task('webpack:dev', () => {
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('static:dev', () => {
-  gulp.src(['app/**/*.html', 'app/**/*.css'])
-    .pipe(gulp.dest('./build'));
+gulp.task('webpack:protractor', () => {
+  gulp.src('test/integration/**.js')
+    .pipe(webpack( {
+      devtool: 'source-map',
+      output: {
+        filename: 'pro_bundle.js'
+      }
+    }))
+    .pipe(gulp.dest('./test'));
 });
 
-gulp.task('webdriverUpdate', webdriverUpdate);
+gulp.task('static:dev', () => {
+  gulp.src(statFiles)
+    .pipe(gulp.dest('./build'));
+});
 
 gulp.task('mongoDB:test', (done) => {
   children.push(cp.spawn('mongod'));
@@ -47,13 +57,14 @@ gulp.task('dropDb:test', ['mongoDB:test'], (done) => {
   });
 });
 
-gulp.task('startservers:test', ['dropDb:test'], (done) => {
+gulp.task('startservers:test', (done) => {
   children.push(cp.fork('server.js'));
   children.push(cp.fork('../server/server.js', [], { env: { MONGODB_URI: mongoUri } } ));
+  children.push(cp.spawn('webdriver-manager', ['start']));
   setTimeout(done, 1000);
 });
 
-gulp.task('protractor:test', ['build:dev', 'webdriverUpdate', 'startservers:test'], () => {
+gulp.task('protractor:test', ['build:dev', 'startservers:test', 'dropDb:test'], () => {
   gulp.src('test/integration/**/*spec.js')
     .pipe(protractor({
       configFile: 'test/integration/config.js'
@@ -66,19 +77,13 @@ gulp.task('protractor:test', ['build:dev', 'webdriverUpdate', 'startservers:test
     });
 });
 
-gulp.task('lint:test', () => {
-  return gulp.src('./test/*.js')
+gulp.task('lint:dev', () => {
+  return gulp.src(lintFiles)
     .pipe(eslint())
     .pipe(eslint.format());
 });
 
-gulp.task('lint:nontest', () => {
-  return gulp.src(files)
-  .pipe(eslint())
-  .pipe(eslint.format());
-});
-
-gulp.task('test', ['protractor:test']);
+gulp.task('test', ['protractor:test', 'webpack:protractor']);
 gulp.task('build:dev', ['webpack:dev', 'static:dev']);
-gulp.task('lint', ['lint:test', 'lint:nontest']);
+gulp.task('lint', ['lint:dev']);
 gulp.task('default', ['build:dev', 'lint', 'test']);
