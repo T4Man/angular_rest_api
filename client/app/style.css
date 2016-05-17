@@ -1,0 +1,9 @@
+body {
+  background-color: #777;
+}
+
+section {
+  border: solid 2px blue;
+  margin-top: 20px;
+  padding: 10px;
+}
