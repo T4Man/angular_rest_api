@@ -22,17 +22,17 @@ Adding a new band or new song will make a POST request and add a document in Mon
 If you change your mind during an edit and click the 'clear' button before clicking
 the 'update' button the document and the list item will not be changed.
 
-##FOR TESTING ONLY WITHOUT MANUALLY STARTING SERVERS OR OPENING A BROWSER
+##For testing only without manually starting servers or browser
 ###You must have Chrome browser for the tests to run.
 
-##FOR ALL TESTS (includes end to end, unit and linter)
+###For all test (includes end to end, unit and linter)
 1. Navigate to the client folder and type 'gulp'.
 2. When all tests complete, press 'control C' to close the Selenium server.
 
-##FOR END TO END TESTING ONLY
+###For end to end testing only
 1. Navigate to the client folder and type 'gulp protractor:test'.
 2. When all tests complete, press 'control C' to close the Selenium server.
 
-##FOR UNIT TESTING ONLY
+###For unit testing only
 1. Navigate to the client folder and type 'gulp webpack:karma'.
 2. Enter 'karma start'.
