@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <title>Basic Angular App</title>
@@ -13,68 +12,48 @@
   </header>
   <main>
     <section data-ng-controller="BandsController as bandsctrl" data-ng-init="bandsctrl.getAll()">
-      <form data-ng-submit="bandsctrl.createBand()">
-        <label for="bandName">Name</label>
-        <input type="text" name="bandName" data-ng-model="bandsctrl.newBand.bandName">
 
-        <label for="genre">Genre</label>
-        <input type="text" name="genre" data-ng-model="bandsctrl.newBand.genre">
-
-        <button id='createBand' type="submit">Add New Band</button>
-      </form>
+      <band-form
+        data-button-text="Create Band"
+        data-crud="create"
+        data-band="bandsctrl.newBand">
+      </band-form>
 
       <ul id="bandlist">
-        <li data-ng-repeat="band in bandsctrl.bands">
-          <p data-ng-if="!band.editing">{{band.bandName}} is a {{band.genre}} band.</p>
-          <form data-ng-if="band.editing" data-ng-submit="bandsctrl.updateBand(band)">
-            <label for="name">Name</label>
-            <input type="text" name="name" data-ng-model="band.bandName">
-
-            <label for="genre">Genre</label>
-            <input type="text" name="genre" data-ng-model="band.genre">
-
-            <button type="submit">Update Band</button>
-            <button data-ng-click="bandsctrl.cancel(band)">Clear</button>
-          </form>
-
-          <button data-ng-if="!band.editing" data-ng-click="bandsctrl.edit(band)">Edit</button>
-          <button data-ng-click="bandsctrl.removeBand(band)">Remove This Band</button>
-        </li>
+        <band-list-item data-ng-repeat="band in bandsctrl.bands" data-band="band">
+          <band-form
+            data-ng-if="band.editing"
+            data-button-text="Update Band"
+            data-crud="update"
+            data-band="band">
+            <button data-ng-click="band.editing = false">Clear</button>
+          </band-form>
+        </band-list-item>
       </ul>
     </section>
 
     <section data-ng-controller="SongsController as songsctrl" data-ng-init="songsctrl.getAll()">
-      <form data-ng-submit="songsctrl.createSong()">
-        <label for="title">Song Title</label>
-        <input type="text" name="title" data-ng-model="songsctrl.newSong.title">
 
-        <label for="bandName">Band Name</label>
-        <input type="text" name="bandName" data-ng-model="songsctrl.newSong.bandName">
-
-        <button id='createSong' type="submit">Add New Song</button>
-      </form>
+      <song-form
+        data-button-text="Add Song"
+        data-crud="create"
+        cata-song="songsctrl.newSong">
+      </song-form>
 
       <ul id="songlist">
-        <li data-ng-repeat="song in songsctrl.songs">
-          <p data-ng-if="!song.editing">{{song.title}} is performed by {{song.bandName}}.</p>
-          <form data-ng-if="song.editing" data-ng-submit="songsctrl.updateSong(song)">
-            <label for="song">Song Title</label>
-            <input type="text" name="title" data-ng-model="song.title">
-
-            <label for="bandName">Band Name</label>
-            <input type="text" name="bandName" data-ng-model="song.bandName">
-
-            <button type="submit">Update Song</button>
-            <button data-ng-click="songsctrl.cancel(song)">Clear</button>
-          </form>
-
-          <button data-ng-if="!song.editing" data-ng-click="songsctrl.edit(song)">Edit</button>
-          <button data-ng-click="songsctrl.removeSong(song)">Remove This Song</button>
-        </li>
+        <song-list-item data-ng-repeat="song in songsctrl.songs" data-song="song">
+          <song-form
+            data-ng-if="band.editing"
+            data-button-text="Update Song"
+            data-crud="update"
+            data-band="band">
+            <button data-ng-click="song.editing = false">Clear</button>
+          </song-form>
+        </song-list-item>
       </ul>
     </section>
+
   </main>
   <script src="bundle.js"></script>
 </body>
-
 </html>

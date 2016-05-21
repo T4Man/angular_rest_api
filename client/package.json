@@ -2,7 +2,7 @@
   "name": "timforman",
   "version": "1.0.0",
   "description": "angular_rest_api_client",
-  "main": "index.js",
+  "main": "entry.js",
   "directories": {
     "test": "test"
   },

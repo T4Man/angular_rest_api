@@ -1,0 +1,17 @@
+<li data-ng-repeat="band in bandsctrl.bands">
+  <ng-transclude></ng-transclude>
+  <p data-ng-if="!band.editing">{{band.bandName}} is a {{band.genre}} band.</p>
+  <!-- <form data-ng-if="band.editing" data-ng-submit="bandsctrl.updateBand(band)">
+    <label for="name">Name</label>
+    <input type="text" name="name" data-ng-model="band.bandName">
+
+    <label for="genre">Genre</label>
+    <input type="text" name="genre" data-ng-model="band.genre">
+
+    <button type="submit">Update Band</button>
+    <button data-ng-click="bandsctrl.cancel(band)">Clear</button>
+  </form> -->
+
+  <button data-ng-if="!band.editing" data-ng-click="band.editing = true">Edit</button>
+  <button data-ng-click="remove(band)">Remove This Band</button>
+</li>

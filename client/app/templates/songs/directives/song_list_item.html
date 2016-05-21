@@ -1,0 +1,17 @@
+<li>
+  <ng-transclude></ng-transclude>
+  <p data-ng-if="!song.editing">{{song.title}} is performed by {{song.bandName}}.</p>
+  <!-- <form data-ng-if="song.editing" data-ng-submit="songsctrl.updateSong(song)">
+    <label for="song">Song Title</label>
+    <input type="text" name="title" data-ng-model="song.title">
+
+    <label for="bandName">Band Name</label>
+    <input type="text" name="bandName" data-ng-model="song.bandName">
+
+    <button type="submit">Update Song</button>
+    <button data-ng-click="songsctrl.cancel(song)">Clear</button>
+  </form> -->
+
+  <button data-ng-if="!song.editing" data-ng-click="song.editing = true">Edit</button>
+  <button data-ng-click="remove(song)">Remove This Song</button>
+</li>
