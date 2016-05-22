@@ -37,16 +37,16 @@
       <song-form
         data-button-text="Add Song"
         data-crud="create"
-        cata-song="songsctrl.newSong">
+        data-song="songsctrl.newSong">
       </song-form>
 
       <ul id="songlist">
         <song-list-item data-ng-repeat="song in songsctrl.songs" data-song="song">
           <song-form
-            data-ng-if="band.editing"
+            data-ng-if="song.editing"
             data-button-text="Update Song"
             data-crud="update"
-            data-band="band">
+            data-song="song">
             <button data-ng-click="song.editing = false">Clear</button>
           </song-form>
         </song-list-item>

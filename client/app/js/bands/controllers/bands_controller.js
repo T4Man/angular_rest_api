@@ -47,6 +47,5 @@ module.exports = function(app) {
       original.bandName = band.bandName;
       original.genre = band.genre;
     };
-
   }]);
-}
+};

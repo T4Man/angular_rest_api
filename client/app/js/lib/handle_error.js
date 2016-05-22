@@ -1,4 +1,4 @@
-module.exports = function(err, res) {
-  console.log(err);
+module.exports = function(error) {
+  console.log(error);
   this.errors = (this.errors || []).push(error);
 };

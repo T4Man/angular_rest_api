@@ -1,17 +1,17 @@
 module.exports = function(app) {
-  app.directive('songListItem', function() {
+  app.directive('songListItem', () => {
     return {
       restrict: 'EAC',
       replace: true,
       require: '^ngController',
       transclude: true,
-      templateUrl: '/templates/songs/directives/song_list_item.html',
+      templateUrl: '/templates/song_list_item.html',
       scope: {
         song: '='
       },
       link: function(scope, element, attrs, controller) {
         scope.remove = controller.removeSong;
       }
-    }
-  })
-}
+    };
+  });
+};

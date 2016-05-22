@@ -1,10 +1,10 @@
 module.exports = function(app) {
-  app.directive('songForm', function() {
+  app.directive('songForm', () => {
     return {
       restrict: 'EAC',
       require: '^ngController',
       transclude: true,
-      templateUrl: '/templates/songs/directives/song_form.html',
+      templateUrl: '/templates/song_form.html',
       scope: {
         song: '=',
         buttonText: '@',
@@ -13,12 +13,10 @@ module.exports = function(app) {
       link: function(scope, element, attrs, controller) {
         var cruds = {
           update: controller.updateSong,
-          create: controller.createSong,
-          cancel: controller.cancelSong,
-          edit: controller.editSong
+          create: controller.createSong
         };
         scope.save = cruds[scope.crud];
       }
-    }
+    };
   });
 };

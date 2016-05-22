@@ -1,4 +1,4 @@
-<li data-ng-repeat="band in bandsctrl.bands">
+<li>
   <ng-transclude></ng-transclude>
   <p data-ng-if="!band.editing">{{band.bandName}} is a {{band.genre}} band.</p>
   <!-- <form data-ng-if="band.editing" data-ng-submit="bandsctrl.updateBand(band)">
