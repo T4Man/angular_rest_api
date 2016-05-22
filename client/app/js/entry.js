@@ -1,4 +1,4 @@
-const angular = require('angular');
+const angular = require('angular'); // eslint-disable-line
 const angularApp = angular.module('angularApp', []);
 
 require('./bands')(angularApp);

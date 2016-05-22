@@ -86,7 +86,7 @@
 	    editBtn.click();
 	    element(by.model('band.bandName')).clear().sendKeys('country band');
 	    element(by.model('band.genre')).clear().sendKeys('country music');
-	    var cancelBtn = elField.element(by.buttonText('Clear'));
+	    var cancelBtn = elField.element(by.buttonText('Cancel'));
 	    cancelBtn.click();
 	    var el = element(by.repeater('band in bandsctrl.bands').row(0).column('bandName'));
 	    el.getText().then((text) => {

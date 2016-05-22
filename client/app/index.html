@@ -26,7 +26,7 @@
             data-button-text="Update Band"
             data-crud="update"
             data-band="band">
-            <button data-ng-click="band.editing = false">Clear</button>
+            <button data-ng-click="bandsctrl.cancel(band)">Cancel</button>
           </band-form>
         </band-list-item>
       </ul>
@@ -47,7 +47,7 @@
             data-button-text="Update Song"
             data-crud="update"
             data-song="song">
-            <button data-ng-click="song.editing = false">Clear</button>
+            <button data-ng-click="songsctrl.cancel(song)">Cancel</button>
           </song-form>
         </song-list-item>
       </ul>

@@ -5,11 +5,13 @@
       "es6": true
     },
     "globals": {
+      "angular": true,
       "require": true,
       "__dirname": true,
       "module": true,
       "process": true,
-      "exports": true
+      "exports": true,
+      "expect": true
     },
     "rules": {
       "indent": ["error", 2],
