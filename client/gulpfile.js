@@ -83,7 +83,7 @@ gulp.task('startservers:test', (done) => {
   setTimeout(done, 1000);
 });
 
-gulp.task('protractor:test', ['build:dev', 'startservers:test', 'dropDb:test'], () => {
+gulp.task('protractor:test', ['build', 'startservers:test', 'dropDb:test'], () => {
   gulp.src('test/integration/**/*spec.js')
     .pipe(protractor({
       configFile: 'test/integration/config.js'
@@ -105,4 +105,4 @@ gulp.task('lint:dev', () => {
 gulp.task('test', ['protractor:test', 'webpack:protractor']);
 gulp.task('build', ['webpack:dev', 'static:dev']);
 gulp.task('lint', ['lint:dev']);
-gulp.task('default', ['build', 'lint']);
+gulp.task('default', ['build', 'lint', 'test']);
