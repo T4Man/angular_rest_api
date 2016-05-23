@@ -38,4 +38,4 @@ the 'update' button the document and the list item will not be changed.
 1. Open a terminal window and type 'mongod' to start MongoDB.
 2. Open a second terminal window, navigate to the server folder.
 3. Enter 'gulp'.
-4. Press 'control C' to exit. 
+4. Press 'control C' to exit when the test concludes. 
