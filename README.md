@@ -27,7 +27,7 @@ the 'update' button the document and the list item will not be changed.
 ###For all tests
 
 1. Navigate to the client folder and type 'gulp'.
-2. When gulp has finished press 'Control C' to exit the Selenium server. 
+2. When gulp has completed press 'Control C' to exit the Selenium server.
 
 ###For linter test only
 
@@ -48,4 +48,4 @@ the 'update' button the document and the list item will not be changed.
 1. Open a terminal window and type 'mongod' to start MongoDB.
 2. Open a second terminal window, navigate to the server folder.
 3. Enter 'gulp'.
-4. Press 'control C' to exit when the test concludes.
+4. When gulp has completed press 'Control C' to exit the Selenium server.
