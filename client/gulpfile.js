@@ -1,4 +1,6 @@
 const gulp = require('gulp');
+const sass = require('gulp-sass');
+const maps = require('gulp-sourcemaps');
 const protractor = require('gulp-protractor').protractor;
 const cp = require('child_process');
 const webpack = require('webpack-stream');
@@ -16,6 +18,14 @@ function killcp() {
     child.kill('SIGTERM');
   });
 }
+
+gulp.task('sass:dev', () => {
+  gulp.src('app/scss/*.scss')
+    .pipe(maps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(maps.write('./'))
+    .pipe(gulp.dest('./build'));
+});
 
 gulp.task('webpack:dev', () => {
   gulp.src('app/js/entry.js')
@@ -102,7 +112,11 @@ gulp.task('lint:dev', () => {
     .pipe(eslint.format());
 });
 
+gulp.task('sass', ['sass:dev']);
+gulp.task('sass:watch', () => {
+  gulp.watch('./*scss', ['sass:dev']);
+});
 gulp.task('test', ['protractor:test', 'webpack:protractor']);
-gulp.task('build', ['webpack:dev', 'static:dev']);
+gulp.task('build', ['sass', 'webpack:dev', 'static:dev']);
 gulp.task('lint', ['lint:dev']);
 gulp.task('default', ['build', 'lint', 'test']);
