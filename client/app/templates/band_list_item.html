@@ -1,0 +1,6 @@
+<li>
+  <ng-transclude></ng-transclude>
+  <p data-ng-if="!band.editing">{{band.bandName}} is a {{band.genre}} band.</p>
+  <button data-ng-if="!band.editing" data-ng-click="edit(band)">Edit</button>
+  <button data-ng-click="remove(band)">Remove This Band</button>
+</li>
