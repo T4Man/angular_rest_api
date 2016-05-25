@@ -14,7 +14,7 @@ describe('the bands post function', function () {
     var elField = element(by.repeater('band in bandsctrl.bands').row(0));
     var delBtn = elField.element(by.buttonText("Remove This Band"));
     delBtn.click();
-    var el = element(by.repeater('band in bandsctrl.bands').row(0).column('bandName'));
+    var el = element(by.repeater('band in bandsctrl.bands').row(1).column('bandName'));
     expect(el.isPresent()).toBe(false);
   });
 });

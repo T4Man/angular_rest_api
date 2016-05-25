@@ -117,6 +117,6 @@ gulp.task('sass:watch', () => {
   gulp.watch('./*scss', ['sass:dev']);
 });
 gulp.task('test', ['protractor:test', 'webpack:protractor']);
-gulp.task('build', ['sass', 'webpack:dev', 'static:dev']);
+gulp.task('build', ['sass', 'webpack:dev', 'static:dev', 'webpack:test']);
 gulp.task('lint', ['lint:dev']);
 gulp.task('default', ['build', 'lint', 'test']);

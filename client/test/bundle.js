@@ -44,11 +44,12 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const angular = __webpack_require__(1);
+	angular = __webpack_require__(1);
 	__webpack_require__(3);
 	__webpack_require__(4);
 	__webpack_require__(20);
 	__webpack_require__(21);
+	__webpack_require__(22);
 
 
 /***/ },
@@ -33948,10 +33949,11 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const angular = __webpack_require__(1); // eslint-disable-line
+	const angular = __webpack_require__(1);
 	const angularApp = angular.module('angularApp', []);
 	
 	__webpack_require__(5)(angularApp);
+	__webpack_require__(7)(angularApp);
 	__webpack_require__(14)(angularApp);
 
 
@@ -33961,16 +33963,24 @@
 
 	module.exports = function(app) {
 	  __webpack_require__(6)(app);
-	  __webpack_require__(11)(app);
 	};
 
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = function(app) {
-	  __webpack_require__(7)(app);
+	  app.factory('handleError', function() {
+	    return function(errorsArr, message) {
+	      return function(err) {
+	        console.log(err);
+	        if (Array.isArray(errorsArr)) {
+	          errorsArr.push(new Error(message || 'Internal Server Error'));
+	        }
+	      };
+	    };
+	  });
 	};
 
 
@@ -33978,42 +33988,60 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const handleError = __webpack_require__(8).handleError;
+	module.exports = function(app) {
+	  __webpack_require__(8)(app);
+	  __webpack_require__(11)(app);
+	};
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(app) {
+	  __webpack_require__(9)(app);
+	};
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
 	const baseUrl = __webpack_require__(10).baseUrl;
 	
 	module.exports = function(app) {
-	  app.controller('BandsController', ['$http', function($http) {
-	
+	  app.controller('BandsController', ['$http', 'handleError', function($http, handleError) {
 	    this.bands = [];
+	    this.errors = [];
 	    var original = {};
 	
-	    this.getAll = () => {
+	    this.getAll = function() {
 	      $http.get(baseUrl + '/api/bands')
 	        .then((res) => {
 	          this.bands = res.data;
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not retrieve bands'));
+	    }.bind(this);
 	
-	    this.createBand = () => {
+	    this.createBand = function() {
 	      $http.post(baseUrl + '/api/bands', this.newBand)
 	        .then((res) => {
 	          this.bands.push(res.data);
 	          this.newBand = null;
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not create band '));
+	    }.bind(this);
 	
-	    this.updateBand = (band) => {
+	    this.updateBand = function(band) {
 	      $http.put(baseUrl + '/api/bands/' + band._id, band)
 	        .then(() => {
 	          band.editing = false;
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not update band '));
+	    }.bind(this);
 	
-	    this.removeBand = (band) => {
+	    this.removeBand = function(band) {
 	      $http.delete(baseUrl + '/api/bands/' + band._id)
 	        .then(() => {
 	          this.bands.splice(this.bands.indexOf(band), 1);
-	        }, handleError.bind(this));
+	        }, handleError(this.errors, 'Could not remove band'));
 	    };
 	
 	    this.cancel = (band) => {
@@ -34028,25 +34056,6 @@
 	      original.genre = band.genre;
 	    };
 	  }]);
-	};
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  handleError: __webpack_require__(9)
-	};
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	module.exports = function(error) {
-	  console.log(error);
-	  this.errors = (this.errors || []).push(error);
 	};
 
 
@@ -34144,43 +34153,42 @@
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const handleError = __webpack_require__(8).handleError;
 	const baseUrl = __webpack_require__(10).baseUrl;
 	
 	module.exports = function(app) {
-	  app.controller('SongsController', ['$http', function($http) {
-	
+	  app.controller('SongsController', ['$http', 'handleError', function($http, handleError) {
 	    this.songs = [];
+	    this.bands = [];
 	    var original = {};
 	
-	    this.getAll = () => {
+	    this.getAll = function() {
 	      $http.get(baseUrl + '/api/songs')
 	        .then((res) => {
 	          this.songs = res.data;
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not retrieve songs'));
+	    }.bind(this);
 	
-	    this.createSong = () => {
+	    this.createSong = function() {
 	      $http.post(baseUrl + '/api/songs', this.newSong)
 	        .then((res) => {
 	          this.songs.push(res.data);
 	          this.newSong = null;
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not create song '));
+	    }.bind(this);
 	
-	    this.updateSong = (song) => {
+	    this.updateSong = function(song) {
 	      $http.put(baseUrl + '/api/songs/' + song._id, song)
 	        .then(() => {
 	          song.editing = false;
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not update song '));
+	    }.bind(this);
 	
-	    this.removeSong = (song) => {
+	    this.removeSong = function(song) {
 	      $http.delete(baseUrl + '/api/songs/' + song._id)
 	        .then(() => {
 	          this.songs.splice(this.songs.indexOf(song), 1);
-	        }, handleError.bind(this));
-	    };
+	        }, handleError(this.errors, 'Could not remove song '));
+	    }.bind(this);
 	
 	    this.cancel = (song) => {
 	      song.editing = false;
@@ -34443,6 +34451,30 @@
 	      expect(songsctrl.songs.length).toBe(0);
 	    });
 	  });
+	});
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var angular = __webpack_require__(1);
+	
+	describe('handleError service', function() {
+	  var handleError;
+	  beforeEach(angular.mock.module('angularApp'));
+	
+	  it('should return a function', angular.mock.inject(function(handleError) {
+	    expect(typeof handleError).toBe('function');
+	  }));
+	
+	  it('should add an error to the errors array', angular.mock.inject(function(handleError) {
+	    var testArr = [];
+	    handleError(testArr, 'test message')();
+	    expect(testArr.length).toBe(1);
+	    expect(testArr[0] instanceof Error).toBe(true);
+	    expect(testArr[0].message).toBe('test message');
+	  }));
 	});
 
 

@@ -1,39 +1,38 @@
-const handleError = require('../../lib').handleError;
 const baseUrl = require('../../config').baseUrl;
 
 module.exports = function(app) {
-  app.controller('BandsController', ['$http', function($http) {
-
+  app.controller('BandsController', ['$http', 'handleError', function($http, handleError) {
     this.bands = [];
+    this.errors = [];
     var original = {};
 
-    this.getAll = () => {
+    this.getAll = function() {
       $http.get(baseUrl + '/api/bands')
         .then((res) => {
           this.bands = res.data;
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not retrieve bands'));
+    }.bind(this);
 
-    this.createBand = () => {
+    this.createBand = function() {
       $http.post(baseUrl + '/api/bands', this.newBand)
         .then((res) => {
           this.bands.push(res.data);
           this.newBand = null;
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not create band '));
+    }.bind(this);
 
-    this.updateBand = (band) => {
+    this.updateBand = function(band) {
       $http.put(baseUrl + '/api/bands/' + band._id, band)
         .then(() => {
           band.editing = false;
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not update band '));
+    }.bind(this);
 
-    this.removeBand = (band) => {
+    this.removeBand = function(band) {
       $http.delete(baseUrl + '/api/bands/' + band._id)
         .then(() => {
           this.bands.splice(this.bands.indexOf(band), 1);
-        }, handleError.bind(this));
+        }, handleError(this.errors, 'Could not remove band'));
     };
 
     this.cancel = (band) => {

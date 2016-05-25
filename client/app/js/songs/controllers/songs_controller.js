@@ -1,40 +1,39 @@
-const handleError = require('../../lib').handleError;
 const baseUrl = require('../../config').baseUrl;
 
 module.exports = function(app) {
-  app.controller('SongsController', ['$http', function($http) {
-
+  app.controller('SongsController', ['$http', 'handleError', function($http, handleError) {
     this.songs = [];
+    this.bands = [];
     var original = {};
 
-    this.getAll = () => {
+    this.getAll = function() {
       $http.get(baseUrl + '/api/songs')
         .then((res) => {
           this.songs = res.data;
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not retrieve songs'));
+    }.bind(this);
 
-    this.createSong = () => {
+    this.createSong = function() {
       $http.post(baseUrl + '/api/songs', this.newSong)
         .then((res) => {
           this.songs.push(res.data);
           this.newSong = null;
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not create song '));
+    }.bind(this);
 
-    this.updateSong = (song) => {
+    this.updateSong = function(song) {
       $http.put(baseUrl + '/api/songs/' + song._id, song)
         .then(() => {
           song.editing = false;
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not update song '));
+    }.bind(this);
 
-    this.removeSong = (song) => {
+    this.removeSong = function(song) {
       $http.delete(baseUrl + '/api/songs/' + song._id)
         .then(() => {
           this.songs.splice(this.songs.indexOf(song), 1);
-        }, handleError.bind(this));
-    };
+        }, handleError(this.errors, 'Could not remove song '));
+    }.bind(this);
 
     this.cancel = (song) => {
       song.editing = false;
