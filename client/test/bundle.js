@@ -34042,7 +34042,7 @@
 	        .then(() => {
 	          this.bands.splice(this.bands.indexOf(band), 1);
 	        }, handleError(this.errors, 'Could not remove band'));
-	    };
+	    }.bind(this);
 	
 	    this.cancel = (band) => {
 	      band.editing = false;

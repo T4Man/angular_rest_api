@@ -1,0 +1,21 @@
+@mixin sectionStyle {
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 2%;
+  border-bottom: dashed 3px blue;
+}
+
+@mixin articleStyle {
+  margin: 5%;
+  background-color: $artColor;
+}
+
+@mixin footerStyle {
+  border-top: dotted 5px blue;
+  background-color: #6060B2;
+  p {
+    font-size: .75em;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}

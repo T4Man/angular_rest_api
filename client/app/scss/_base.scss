@@ -16,10 +16,7 @@ main {
     }
   }
   section {
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-top: 2%;
-    border-bottom: dashed 3px blue;
+    @include sectionStyle;
 
     li {
       margin-top: 5px;
@@ -27,8 +24,7 @@ main {
   }
 
   article {
-    margin: 5%;
-    background-color: $artColor;
+    @include articleStyle;
   }
 }
 p {
@@ -45,4 +41,7 @@ h3 {
   font-size: 1.5em;
   font-style: $em;
   text-align: center;
+}
+footer {
+  @include footerStyle;
 }

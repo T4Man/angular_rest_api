@@ -10,7 +10,7 @@ const mongoUri = 'mongodb://localhost/bands_test';
 
 var lintFiles = ['**/*.js', '!node_modules/**', '!build/**', '!**/*spec.js',
 '!test/**bundle.**', '!*.conf.js'];
-var statFiles = ['app/**/*.html', 'app/**/*.css'];
+var statFiles = ['app/**/*.html'];
 var children = [];
 
 function killcp() {
