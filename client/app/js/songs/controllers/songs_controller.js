@@ -1,38 +1,39 @@
 const baseUrl = require('../../config').baseUrl;
+const angular = require('angular');
+// const angularApp = angular.module('angularApp', []);
+// require('../../services/tf_resource')(app);
 
 module.exports = function(app) {
-  app.controller('SongsController', ['$http', 'handleError', function($http, handleError) {
+  app.controller('SongsController', ['tfResource', function(Resource) {
     this.songs = [];
     this.bands = [];
+    this.errors = [];
+    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs');
     var original = {};
 
-    this.getAll = function() {
-      $http.get(baseUrl + '/api/songs')
-        .then((res) => {
-          this.songs = res.data;
-        }, handleError(this.errors, 'Could not retrieve songs'));
-    }.bind(this);
+    this.getAll = remote.getAll.bind(remote);
+
 
     this.createSong = function() {
-      $http.post(baseUrl + '/api/songs', this.newSong)
+      remote.create(this.newSong)
         .then((res) => {
           this.songs.push(res.data);
           this.newSong = null;
-        }, handleError(this.errors, 'Could not create song '));
+        });
     }.bind(this);
 
     this.updateSong = function(song) {
-      $http.put(baseUrl + '/api/songs/' + song._id, song)
-        .then(() => {
+      remote.put(song)
+        .then((res) => {
           song.editing = false;
-        }, handleError(this.errors, 'Could not update song '));
+        });
     }.bind(this);
 
     this.removeSong = function(song) {
-      $http.delete(baseUrl + '/api/songs/' + song._id)
-        .then(() => {
+      remote.delete(song)
+        .then((res) => {
           this.songs.splice(this.songs.indexOf(song), 1);
-        }, handleError(this.errors, 'Could not remove song '));
+        });
     }.bind(this);
 
     this.cancel = (song) => {

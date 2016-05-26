@@ -1,38 +1,37 @@
 const baseUrl = require('../../config').baseUrl;
+const angular = require('angular');
+// const angularApp = angular.module('angularApp', []);
+// require('../../services/tf_resource')(app);
 
 module.exports = function(app) {
-  app.controller('BandsController', ['$http', 'handleError', function($http, handleError) {
+  app.controller('BandsController', ['tfResource', function(Resource) {
     this.bands = [];
     this.errors = [];
+    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands');
     var original = {};
 
-    this.getAll = function() {
-      $http.get(baseUrl + '/api/bands')
-        .then((res) => {
-          this.bands = res.data;
-        }, handleError(this.errors, 'Could not retrieve bands'));
-    }.bind(this);
+    this.getAll = remote.getAll().bind(remote);
 
     this.createBand = function() {
-      $http.post(baseUrl + '/api/bands', this.newBand)
+      remote.create(this.newBand)
         .then((res) => {
           this.bands.push(res.data);
           this.newBand = null;
-        }, handleError(this.errors, 'Could not create band '));
+        });
     }.bind(this);
 
     this.updateBand = function(band) {
-      $http.put(baseUrl + '/api/bands/' + band._id, band)
-        .then(() => {
+      remote.put(band)
+        .then((res) => {
           band.editing = false;
-        }, handleError(this.errors, 'Could not update band '));
+        });
     }.bind(this);
 
     this.removeBand = function(band) {
-      $http.delete(baseUrl + '/api/bands/' + band._id)
-        .then(() => {
+      remote.delete(band)
+        .then((res) => {
           this.bands.splice(this.bands.indexOf(band), 1);
-        }, handleError(this.errors, 'Could not remove band'));
+        });
     }.bind(this);
 
     this.cancel = (band) => {

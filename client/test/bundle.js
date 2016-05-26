@@ -47,9 +47,9 @@
 	angular = __webpack_require__(1);
 	__webpack_require__(3);
 	__webpack_require__(4);
-	__webpack_require__(20);
 	__webpack_require__(21);
 	__webpack_require__(22);
+	__webpack_require__(23);
 
 
 /***/ },
@@ -33953,8 +33953,8 @@
 	const angularApp = angular.module('angularApp', []);
 	
 	__webpack_require__(5)(angularApp);
-	__webpack_require__(7)(angularApp);
-	__webpack_require__(14)(angularApp);
+	__webpack_require__(8)(angularApp);
+	__webpack_require__(15)(angularApp);
 
 
 /***/ },
@@ -33963,6 +33963,7 @@
 
 	module.exports = function(app) {
 	  __webpack_require__(6)(app);
+	  __webpack_require__(7)(app);
 	};
 
 
@@ -33986,11 +33987,54 @@
 
 /***/ },
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = function(app) {
-	  __webpack_require__(8)(app);
-	  __webpack_require__(11)(app);
+	
+	  const reqFulfill = function(cb) {
+	    return function(res) {
+	      cb(null, res.data);
+	    };
+	  };
+	
+	  const reqReject = function(cb) {
+	    return function(res) {
+	      cb(res);
+	    };
+	  };
+	
+	  const baseUrl = 'http://localhost:3000';
+	
+	  app.factory('tfResource', ['$http', 'handleError', function($http, tfError) {
+	    var Resource = function(resourceName, baseUrl) {
+	      //this.data = resourceName;
+	      this.url = baseUrl;
+	    };
+	
+	    Resource.prototype.getAll = function(cb) {
+	      $http.get(baseUrl + '/api/bands')
+	        .then(reqFulfill(cb), reqReject(cb));
+	    }, tfError(this.errors || 'Could not retrieve bands');
+	
+	    Resource.prototype.create = function(data, cb) {
+	      $http.post(this.url + '/api/' + this.resourceName, data)
+	        .then(reqFulfill(cb), reqReject(cb));
+	    }, tfError(this.errors || 'Could not create band');
+	
+	    Resource.prototype.update = function(data, cb) {
+	      $http.put(this.url + '/api/' + this.resourceName + '/' + data._id, data)
+	        .then(reqFulfill(cb), reqReject(cb));
+	    }, tfError(this.errors || 'Could not update band');
+	
+	    Resource.prototype.delete = function(data, cb) {
+	      $http.delete(this.url + '/api/' + this.resourceName + '/' + data._id)
+	        .then(reqFulfill(cb), reqReject(cb));
+	    }, tfError(this.errors || 'Could not delete band');
+	
+	    return function(resourceName) {
+	      return new Resource(resourceName);
+	    };
+	  }]);
 	};
 
 
@@ -34000,6 +34044,7 @@
 
 	module.exports = function(app) {
 	  __webpack_require__(9)(app);
+	  __webpack_require__(12)(app);
 	};
 
 
@@ -34007,41 +34052,49 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const baseUrl = __webpack_require__(10).baseUrl;
+	module.exports = function(app) {
+	  __webpack_require__(10)(app);
+	};
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const baseUrl = __webpack_require__(11).baseUrl;
+	const angular = __webpack_require__(1);
+	// const angularApp = angular.module('angularApp', []);
+	// require('../../services/tf_resource')(app);
 	
 	module.exports = function(app) {
-	  app.controller('BandsController', ['$http', 'handleError', function($http, handleError) {
+	  app.controller('BandsController', ['tfResource', function(Resource) {
 	    this.bands = [];
 	    this.errors = [];
+	    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands');
 	    var original = {};
 	
-	    this.getAll = function() {
-	      $http.get(baseUrl + '/api/bands')
-	        .then((res) => {
-	          this.bands = res.data;
-	        }, handleError(this.errors, 'Could not retrieve bands'));
-	    }.bind(this);
+	    this.getAll = remote.getAll().bind(remote);
 	
 	    this.createBand = function() {
-	      $http.post(baseUrl + '/api/bands', this.newBand)
+	      remote.create(this.newBand)
 	        .then((res) => {
 	          this.bands.push(res.data);
 	          this.newBand = null;
-	        }, handleError(this.errors, 'Could not create band '));
+	        });
 	    }.bind(this);
 	
 	    this.updateBand = function(band) {
-	      $http.put(baseUrl + '/api/bands/' + band._id, band)
-	        .then(() => {
+	      remote.put(band)
+	        .then((res) => {
 	          band.editing = false;
-	        }, handleError(this.errors, 'Could not update band '));
+	        });
 	    }.bind(this);
 	
 	    this.removeBand = function(band) {
-	      $http.delete(baseUrl + '/api/bands/' + band._id)
-	        .then(() => {
+	      remote.delete(band)
+	        .then((res) => {
 	          this.bands.splice(this.bands.indexOf(band), 1);
-	        }, handleError(this.errors, 'Could not remove band'));
+	        });
 	    }.bind(this);
 	
 	    this.cancel = (band) => {
@@ -34060,7 +34113,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -34069,17 +34122,17 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(12)(app);
 	  __webpack_require__(13)(app);
+	  __webpack_require__(14)(app);
 	};
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34103,7 +34156,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34131,21 +34184,12 @@
 
 
 /***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(app) {
-	  __webpack_require__(15)(app);
-	  __webpack_require__(17)(app);
-	};
-
-
-/***/ },
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
 	  __webpack_require__(16)(app);
+	  __webpack_require__(18)(app);
 	};
 
 
@@ -34153,41 +34197,51 @@
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const baseUrl = __webpack_require__(10).baseUrl;
+	module.exports = function(app) {
+	  __webpack_require__(17)(app);
+	};
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const baseUrl = __webpack_require__(11).baseUrl;
+	const angular = __webpack_require__(1);
+	// const angularApp = angular.module('angularApp', []);
+	// require('../../services/tf_resource')(app);
 	
 	module.exports = function(app) {
-	  app.controller('SongsController', ['$http', 'handleError', function($http, handleError) {
+	  app.controller('SongsController', ['tfResource', function(Resource) {
 	    this.songs = [];
 	    this.bands = [];
+	    this.errors = [];
+	    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs');
 	    var original = {};
 	
-	    this.getAll = function() {
-	      $http.get(baseUrl + '/api/songs')
-	        .then((res) => {
-	          this.songs = res.data;
-	        }, handleError(this.errors, 'Could not retrieve songs'));
-	    }.bind(this);
+	    this.getAll = remote.getAll.bind(remote);
+	
 	
 	    this.createSong = function() {
-	      $http.post(baseUrl + '/api/songs', this.newSong)
+	      remote.create(this.newSong)
 	        .then((res) => {
 	          this.songs.push(res.data);
 	          this.newSong = null;
-	        }, handleError(this.errors, 'Could not create song '));
+	        });
 	    }.bind(this);
 	
 	    this.updateSong = function(song) {
-	      $http.put(baseUrl + '/api/songs/' + song._id, song)
-	        .then(() => {
+	      remote.put(song)
+	        .then((res) => {
 	          song.editing = false;
-	        }, handleError(this.errors, 'Could not update song '));
+	        });
 	    }.bind(this);
 	
 	    this.removeSong = function(song) {
-	      $http.delete(baseUrl + '/api/songs/' + song._id)
-	        .then(() => {
+	      remote.delete(song)
+	        .then((res) => {
 	          this.songs.splice(this.songs.indexOf(song), 1);
-	        }, handleError(this.errors, 'Could not remove song '));
+	        });
 	    }.bind(this);
 	
 	    this.cancel = (song) => {
@@ -34207,17 +34261,17 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(18)(app);
 	  __webpack_require__(19)(app);
+	  __webpack_require__(20)(app);
 	};
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34241,7 +34295,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34269,7 +34323,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var angular = __webpack_require__(1);
@@ -34362,7 +34416,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var angular = __webpack_require__(1);
@@ -34455,7 +34509,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var angular = __webpack_require__(1);
