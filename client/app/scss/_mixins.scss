@@ -10,6 +10,12 @@
   background-color: $artColor;
 }
 
+@mixin articleTrans {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
 @mixin footerStyle {
   border-top: dotted 5px blue;
   background-color: #6060B2;
