@@ -34063,7 +34063,7 @@
 	    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
 	    var original = {};
 	
-	    this.getAll = remote.getAll().bind(remote);
+	    this.getAll = remote.getAll.bind(remote);
 	
 	    this.createBand = function() {
 	      remote.create(this.newBand)
