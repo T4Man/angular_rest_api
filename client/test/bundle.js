@@ -33990,50 +33990,43 @@
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
-	
-	  const reqFulfill = function(cb) {
-	    return function(res) {
-	      cb(null, res.data);
-	    };
-	  };
-	
-	  const reqReject = function(cb) {
-	    return function(res) {
-	      cb(res);
-	    };
-	  };
-	
-	  const baseUrl = 'http://localhost:3000';
-	
 	  app.factory('tfResource', ['$http', 'handleError', function($http, tfError) {
-	    var Resource = function(resourceName, baseUrl) {
-	      //this.data = resourceName;
+	    var Resource = function(resourceArr, errorsArr, baseUrl, options) {
+	      this.data = resourceArr;
 	      this.url = baseUrl;
+	      this.errors = errorsArr;
+	      this.options = options || {};
+	      this.options.errMessages = this.options.errMessages || {};
 	    };
 	
-	    Resource.prototype.getAll = function(cb) {
-	      $http.get(baseUrl + '/api/bands')
-	        .then(reqFulfill(cb), reqReject(cb));
-	    }, tfError(this.errors || 'Could not retrieve bands');
-	
-	    Resource.prototype.create = function(data, cb) {
-	      $http.post(this.url + '/api/' + this.resourceName, data)
-	        .then(reqFulfill(cb), reqReject(cb));
-	    }, tfError(this.errors || 'Could not create band');
-	
-	    Resource.prototype.update = function(data, cb) {
-	      $http.put(this.url + '/api/' + this.resourceName + '/' + data._id, data)
-	        .then(reqFulfill(cb), reqReject(cb));
-	    }, tfError(this.errors || 'Could not update band');
-	
-	    Resource.prototype.delete = function(data, cb) {
-	      $http.delete(this.url + '/api/' + this.resourceName + '/' + data._id)
-	        .then(reqFulfill(cb), reqReject(cb));
-	    }, tfError(this.errors || 'Could not delete band');
-	
-	    return function(resourceName) {
-	      return new Resource(resourceName);
+	    Resource.prototype.getAll = function() {
+	      return $http.get(this.url)
+	        .then((res) => {
+	          this.data.splice(0);
+	          for(var i = 0; i < res.data.length; i++)
+	            this.data.push(res.data[i]);
+	        }, tfError(this.errors, this.options.errMessages.getAll ||'could not fetch resource'))
 	    };
+	
+	    Resource.prototype.create = function(resource) {
+	      return $http.post(this.url, resource)
+	        .then((res) => {
+	          this.data.push(res.data);
+	        }, tfError(this.errors, this.options.errMessages.create || 'could not save resource'));
+	    };
+	
+	    Resource.prototype.update = function(resource) {
+	      return $http.put(this.url + '/' + resource._id, resource)
+	        .catch(tfError(this.errors, this.options.errMessages.update ||'could not update resource'));
+	    };
+	
+	    Resource.prototype.remove = function(resource) {
+	      return $http.delete(this.url + '/' + resource._id)
+	        .then(() => {
+	          this.data.splice(this.data.indexOf(resource), 1);
+	        }, tfError(this.errors, this.options.errMessages.remove || 'could not remove the resource'));
+	    };
+	    return Resource;
 	  }]);
 	};
 
@@ -34062,40 +34055,31 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const baseUrl = __webpack_require__(11).baseUrl;
-	const angular = __webpack_require__(1);
-	// const angularApp = angular.module('angularApp', []);
-	// require('../../services/tf_resource')(app);
 	
 	module.exports = function(app) {
 	  app.controller('BandsController', ['tfResource', function(Resource) {
 	    this.bands = [];
 	    this.errors = [];
-	    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands');
+	    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
 	    var original = {};
 	
 	    this.getAll = remote.getAll().bind(remote);
 	
 	    this.createBand = function() {
 	      remote.create(this.newBand)
-	        .then((res) => {
-	          this.bands.push(res.data);
+	        .then(() => {
 	          this.newBand = null;
 	        });
 	    }.bind(this);
 	
 	    this.updateBand = function(band) {
-	      remote.put(band)
-	        .then((res) => {
+	      remote.update(band)
+	        .then(() => {
 	          band.editing = false;
 	        });
-	    }.bind(this);
+	    };
 	
-	    this.removeBand = function(band) {
-	      remote.delete(band)
-	        .then((res) => {
-	          this.bands.splice(this.bands.indexOf(band), 1);
-	        });
-	    }.bind(this);
+	    this.removeBand = remote.remove.bind(remote);
 	
 	    this.cancel = (band) => {
 	      band.editing = false;
@@ -34207,42 +34191,32 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const baseUrl = __webpack_require__(11).baseUrl;
-	const angular = __webpack_require__(1);
-	// const angularApp = angular.module('angularApp', []);
-	// require('../../services/tf_resource')(app);
 	
 	module.exports = function(app) {
 	  app.controller('SongsController', ['tfResource', function(Resource) {
 	    this.songs = [];
 	    this.bands = [];
 	    this.errors = [];
-	    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs');
+	    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs', {errMessages: {getAll: 'custom error message'}});
 	    var original = {};
 	
 	    this.getAll = remote.getAll.bind(remote);
 	
-	
 	    this.createSong = function() {
 	      remote.create(this.newSong)
-	        .then((res) => {
-	          this.songs.push(res.data);
+	        .then(() => {
 	          this.newSong = null;
 	        });
 	    }.bind(this);
 	
 	    this.updateSong = function(song) {
-	      remote.put(song)
-	        .then((res) => {
+	      remote.update(song)
+	        .then(() => {
 	          song.editing = false;
 	        });
-	    }.bind(this);
+	    };
 	
-	    this.removeSong = function(song) {
-	      remote.delete(song)
-	        .then((res) => {
-	          this.songs.splice(this.songs.indexOf(song), 1);
-	        });
-	    }.bind(this);
+	    this.removeSong = remote.remove.bind(remote);
 	
 	    this.cancel = (song) => {
 	      song.editing = false;

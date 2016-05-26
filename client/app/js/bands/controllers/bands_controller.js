@@ -1,38 +1,29 @@
 const baseUrl = require('../../config').baseUrl;
-const angular = require('angular');
-// const angularApp = angular.module('angularApp', []);
-// require('../../services/tf_resource')(app);
 
 module.exports = function(app) {
   app.controller('BandsController', ['tfResource', function(Resource) {
     this.bands = [];
     this.errors = [];
-    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands');
+    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
     var original = {};
 
     this.getAll = remote.getAll().bind(remote);
 
     this.createBand = function() {
       remote.create(this.newBand)
-        .then((res) => {
-          this.bands.push(res.data);
+        .then(() => {
           this.newBand = null;
         });
     }.bind(this);
 
     this.updateBand = function(band) {
-      remote.put(band)
-        .then((res) => {
+      remote.update(band)
+        .then(() => {
           band.editing = false;
         });
-    }.bind(this);
+    };
 
-    this.removeBand = function(band) {
-      remote.delete(band)
-        .then((res) => {
-          this.bands.splice(this.bands.indexOf(band), 1);
-        });
-    }.bind(this);
+    this.removeBand = remote.remove.bind(remote);
 
     this.cancel = (band) => {
       band.editing = false;
