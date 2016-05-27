@@ -34061,7 +34061,7 @@
 	  app.controller('BandsController', ['tfResource', function(SrcInfo) {
 	    this.bands = [];
 	    this.errors = [];
-	    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
+	    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands');
 	    var original = {};
 	
 	    this.getAll = remote.getAll.bind(remote);
@@ -34198,7 +34198,7 @@
 	    this.songs = [];
 	    this.bands = [];
 	    this.errors = [];
-	    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs', {errMessages: {getAll: 'custom error message'}});
+	    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs');
 	    var original = {};
 	
 	    this.getAll = remote.getAll.bind(remote);

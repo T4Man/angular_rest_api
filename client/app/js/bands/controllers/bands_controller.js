@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.controller('BandsController', ['tfResource', function(SrcInfo) {
     this.bands = [];
     this.errors = [];
-    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands', { errMessages: { getAll: 'custom error message' } } );
+    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands');
     var original = {};
 
     this.getAll = remote.getAll.bind(remote);
