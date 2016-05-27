@@ -1,0 +1,10 @@
+<form data-ng-submit="save(song)">
+  <label for="title">Song Title</label>
+  <input type="text" name="title" data-ng-model="song.title">
+
+  <label for="bandName">Band Name</label>
+  <input type="text" name="bandName" data-ng-model="song.bandName">
+
+  <button id='createSong' type="submit">{{ buttonText }}</button>
+  <ng-transclude></ng-transclude>
+</form>
