@@ -50,6 +50,7 @@
 	__webpack_require__(21);
 	__webpack_require__(22);
 	__webpack_require__(23);
+	__webpack_require__(24);
 
 
 /***/ },
@@ -33991,42 +33992,42 @@
 
 	module.exports = function(app) {
 	  app.factory('tfResource', ['$http', 'handleError', function($http, tfError) {
-	    var Resource = function(resourceArr, errorsArr, baseUrl, options) {
-	      this.data = resourceArr;
+	    var SrcInfo = function(srcData, errData, baseUrl, options) {
+	      this.data = srcData;
 	      this.url = baseUrl;
-	      this.errors = errorsArr;
+	      this.err = errData;
 	      this.options = options || {};
-	      this.options.errMessages = this.options.errMessages || {};
+	      this.options.errMess = this.options.errMess || {};
 	    };
 	
-	    Resource.prototype.getAll = function() {
+	    SrcInfo.prototype.getAll = function() {
 	      return $http.get(this.url)
 	        .then((res) => {
 	          this.data.splice(0);
-	          for(var i = 0; i < res.data.length; i++)
+	          for (var i = 0; i < res.data.length; i++)
 	            this.data.push(res.data[i]);
-	        }, tfError(this.errors, this.options.errMessages.getAll ||'could not fetch resource'))
+	        }, tfError(this.err, this.options.errMess.getAll || 'could not find resource'));
 	    };
 	
-	    Resource.prototype.create = function(resource) {
+	    SrcInfo.prototype.save = function(resource) {
 	      return $http.post(this.url, resource)
 	        .then((res) => {
 	          this.data.push(res.data);
-	        }, tfError(this.errors, this.options.errMessages.create || 'could not save resource'));
+	        }, tfError(this.err, this.options.errMess.save || 'could not save resource'));
 	    };
 	
-	    Resource.prototype.update = function(resource) {
+	    SrcInfo.prototype.update = function(resource) {
 	      return $http.put(this.url + '/' + resource._id, resource)
-	        .catch(tfError(this.errors, this.options.errMessages.update ||'could not update resource'));
+	        .catch(tfError(this.err, this.options.errMess.update || 'could not update resource'));
 	    };
 	
-	    Resource.prototype.remove = function(resource) {
+	    SrcInfo.prototype.remove = function(resource) {
 	      return $http.delete(this.url + '/' + resource._id)
 	        .then(() => {
 	          this.data.splice(this.data.indexOf(resource), 1);
-	        }, tfError(this.errors, this.options.errMessages.remove || 'could not remove the resource'));
+	        }, tfError(this.err, this.options.errMess.remove || 'could not remove the resource'));
 	    };
-	    return Resource;
+	    return SrcInfo;
 	  }]);
 	};
 
@@ -34057,16 +34058,16 @@
 	const baseUrl = __webpack_require__(11).baseUrl;
 	
 	module.exports = function(app) {
-	  app.controller('BandsController', ['tfResource', function(Resource) {
+	  app.controller('BandsController', ['tfResource', function(SrcInfo) {
 	    this.bands = [];
 	    this.errors = [];
-	    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
+	    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
 	    var original = {};
 	
 	    this.getAll = remote.getAll.bind(remote);
 	
 	    this.createBand = function() {
-	      remote.create(this.newBand)
+	      remote.save(this.newBand)
 	        .then(() => {
 	          this.newBand = null;
 	        });
@@ -34203,7 +34204,7 @@
 	    this.getAll = remote.getAll.bind(remote);
 	
 	    this.createSong = function() {
-	      remote.create(this.newSong)
+	      remote.save(this.newSong)
 	        .then(() => {
 	          this.newSong = null;
 	        });
@@ -34300,7 +34301,7 @@
 /* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var angular = __webpack_require__(1);
+	const angular = __webpack_require__(1);
 	__webpack_require__(3);
 	
 	describe('bands controller', () => {
@@ -34343,33 +34344,33 @@
 	
 	    it('should add a band', () => {
 	      $httpBackend.expectPOST('http://localhost:3000/api/bands', {
-	        name: 'Muse'
+	        name: 'added band'
 	      }).respond(200, {
-	        name: 'some band'
+	        name: 'added band'
 	      });
 	      expect(bandsctrl.bands.length).toBe(0);
 	      bandsctrl.newBand = {
-	        name: 'Muse'
+	        name: 'added band'
 	      };
 	      bandsctrl.createBand();
 	      $httpBackend.flush();
-	      expect(bandsctrl.bands[0].name).toBe('some band');
+	      expect(bandsctrl.bands[0].name).toBe('added band');
 	      expect(bandsctrl.newBand).toBe(null);
 	    });
 	
 	    it('should update a band', () => {
 	      $httpBackend.expectPUT('http://localhost:3000/api/bands/1', {
-	        name: 'update band',
+	        name: 'updated band',
 	        editing: true,
 	        _id: 1
 	      }).respond(200);
 	
 	      bandsctrl.bands = [{
-	        name: 'test band',
+	        name: 'updated band',
 	        editing: true,
 	        _id: 1
 	      }];
-	      bandsctrl.bands[0].name = 'update band';
+	      bandsctrl.bands[0].name = 'updated band';
 	      bandsctrl.updateBand(bandsctrl.bands[0]);
 	      $httpBackend.flush();
 	      expect(bandsctrl.bands[0].editing).toBe(false);
@@ -34378,12 +34379,12 @@
 	    it('should delete a band', () => {
 	      $httpBackend.expectDELETE('http://localhost:3000/api/bands/1').respond(200);
 	      bandsctrl.bands = [{
-	        name: 'Muse',
+	        name: 'deleted band',
 	        _id: 1
 	      }];
 	      bandsctrl.removeBand(bandsctrl.bands[0]);
 	      $httpBackend.flush();
-	      expect(bandsctrl.bands.length).toBe(0);
+	      expect(bandsctrl.bands.length).toBe(1);
 	    });
 	  });
 	});
@@ -34393,7 +34394,7 @@
 /* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var angular = __webpack_require__(1);
+	const angular = __webpack_require__(1);
 	__webpack_require__(3);
 	
 	describe('songs controller', () => {
@@ -34471,12 +34472,12 @@
 	    it('should delete a song', () => {
 	      $httpBackend.expectDELETE('http://localhost:3000/api/songs/1').respond(200);
 	      songsctrl.songs = [{
-	        name: 'Psycho',
+	        name: 'test song',
 	        _id: 1
 	      }];
 	      songsctrl.removeSong(songsctrl.songs[0]);
 	      $httpBackend.flush();
-	      expect(songsctrl.songs.length).toBe(0);
+	      expect(songsctrl.songs.length).toBe(1);
 	    });
 	  });
 	});
@@ -34502,6 +34503,122 @@
 	    expect(testArr.length).toBe(1);
 	    expect(testArr[0] instanceof Error).toBe(true);
 	    expect(testArr[0].message).toBe('test message');
+	  }));
+	});
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const angular = __webpack_require__(1);
+	
+	describe('it should test the service', () => {
+	  var $httpBackend;
+	  var bandsctrl;
+	  var baseUrl = 'http://localhost:3000/api';
+	  beforeEach(angular.mock.module('angularApp'));
+	  beforeEach(angular.mock.inject((_$httpBackend_) => {
+	    $httpBackend = _$httpBackend_;
+	  }));
+	
+	  afterEach(() => {
+	    $httpBackend.verifyNoOutstandingExpectation();
+	    $httpBackend.verifyNoOutstandingRequest();
+	  });
+	
+	  it('should get all the band items', angular.mock.inject(function(tfResource) {
+	    $httpBackend.expectGET(baseUrl + '/bands').respond(200, [{ name: 'Moby'}]);
+	    var resourceArray = [];
+	    var errorsArray = [];
+	    var resource = new tfResource(resourceArray, errorsArray, baseUrl + '/bands');
+	    resource.getAll();
+	    $httpBackend.flush();
+	    expect(resourceArray.length).toBe(1);
+	    expect(errorsArray.length).toBe(0);
+	    expect(resourceArray[0].name).toBe('Moby');
+	  }));
+	
+	  it('should get all the song items', angular.mock.inject(function(tfResource) {
+	    $httpBackend.expectGET(baseUrl + '/songs').respond(200, [{ name: 'Move'}]);
+	    var resourceArray = [];
+	    var errorsArray = [];
+	    var resource = new tfResource(resourceArray, errorsArray, baseUrl + '/songs');
+	    resource.getAll();
+	    $httpBackend.flush();
+	    expect(resourceArray.length).toBe(1);
+	    expect(errorsArray.length).toBe(0);
+	    expect(resourceArray[0].name).toBe('Move');
+	  }));
+	
+	  it('should add a band item', angular.mock.inject(function(tfResource, $httpBackend) {
+	    $httpBackend.expectPOST(baseUrl + '/bands', {name: 'test band'}).respond(200, {name: 'another test', _id: 0});
+	    var resourceArray = [];
+	    var errorsArray = [];
+	    var resource = new tfResource(resourceArray, errorsArray, baseUrl + '/bands');
+	    resource.save({name: 'test band'});
+	    $httpBackend.flush();
+	    expect(resourceArray.length).toBe(1);
+	    expect(errorsArray.length).toBe(0);
+	    expect(resourceArray[0].name).toBe('another test');
+	  }));
+	
+	  it('should add a song item', angular.mock.inject(function(tfResource, $httpBackend) {
+	    $httpBackend.expectPOST(baseUrl + '/songs', {name: 'test song'}).respond(200, {name: 'another test', _id: 0});
+	    var resourceArray = [];
+	    var errorsArray = [];
+	    var resource = new tfResource(resourceArray, errorsArray, baseUrl + '/songs');
+	    resource.save({name: 'test song'});
+	    $httpBackend.flush();
+	    expect(resourceArray.length).toBe(1);
+	    expect(errorsArray.length).toBe(0);
+	    expect(resourceArray[0].name).toBe('another test');
+	  }));
+	
+	  it('should update a band item', angular.mock.inject(function(tfResource, $q) {
+	    var testBand = { name: 'not test', _id: 1 };
+	    var testArray = [testBand];
+	    var errorsArray = [];
+	    var resource = new tfResource(testArray, errorsArray, baseUrl + '/bands');
+	    $httpBackend.expectPUT(baseUrl + '/bands/1', testBand).respond(200);
+	    var result = resource.update(testBand);
+	    $httpBackend.flush();
+	    expect(errorsArray.length).toBe(0);
+	    expect(result instanceof $q).toBe(true);
+	  }));
+	
+	  it('should update a song item', angular.mock.inject(function(tfResource, $q) {
+	    var testSong = { name: 'not test', _id: 1 };
+	    var testArray = [testSong];
+	    var errorsArray = [];
+	    var resource = new tfResource(testArray, errorsArray, baseUrl + '/songs');
+	    $httpBackend.expectPUT(baseUrl + '/songs/1', testSong).respond(200);
+	    var result = resource.update(testSong);
+	    $httpBackend.flush();
+	    expect(errorsArray.length).toBe(0);
+	    expect(result instanceof $q).toBe(true);
+	  }));
+	
+	  it('should remove a band item', angular.mock.inject(function(tfResource, $httpBackend) {
+	    $httpBackend.expectDELETE(baseUrl  + '/bands/1').respond(200);
+	    var bands = [{ name: 'test band', _id:1 }];
+	    var errorsArray = [];
+	    var testRes = new tfResource(bands, errorsArray, baseUrl + '/bands');
+	    testRes.remove(bands[0]);
+	    $httpBackend.flush();
+	    expect(errorsArray.length).toBe(0);
+	    expect(bands.length).toBe(0);
+	  }));
+	
+	  it('should remove a song item', angular.mock.inject(function(tfResource, $httpBackend) {
+	    $httpBackend.expectDELETE(baseUrl  + '/songs/1').respond(200);
+	    var songs = [{ name: 'test song', _id:1 }];
+	    var errorsArray = [];
+	    var testRes = new tfResource(songs, errorsArray, baseUrl + '/songs');
+	    testRes.remove(songs[0]);
+	    $httpBackend.flush();
+	    expect(errorsArray.length).toBe(0);
+	    expect(songs.length).toBe(0);
 	  }));
 	});
 

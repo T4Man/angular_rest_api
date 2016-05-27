@@ -7,7 +7,7 @@ const queryRouter = require(__dirname + '/routes/bandQuery');
 
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/db');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/music_db');
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');

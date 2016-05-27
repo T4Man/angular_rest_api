@@ -1,16 +1,16 @@
 const baseUrl = require('../../config').baseUrl;
 
 module.exports = function(app) {
-  app.controller('BandsController', ['tfResource', function(Resource) {
+  app.controller('BandsController', ['tfResource', function(SrcInfo) {
     this.bands = [];
     this.errors = [];
-    var remote = new Resource(this.bands, this.errors, baseUrl + '/api/bands', {errMessages: {getAll: 'custom error message'}});
+    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands', { errMessages: { getAll: 'custom error message' } } );
     var original = {};
 
     this.getAll = remote.getAll.bind(remote);
 
     this.createBand = function() {
-      remote.create(this.newBand)
+      remote.save(this.newBand)
         .then(() => {
           this.newBand = null;
         });

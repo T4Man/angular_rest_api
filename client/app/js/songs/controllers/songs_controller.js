@@ -5,13 +5,13 @@ module.exports = function(app) {
     this.songs = [];
     this.bands = [];
     this.errors = [];
-    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs', {errMessages: {getAll: 'custom error message'}});
+    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs', { errMessages: { getAll: 'custom error message' } } );
     var original = {};
 
     this.getAll = remote.getAll.bind(remote);
 
     this.createSong = function() {
-      remote.create(this.newSong)
+      remote.save(this.newSong)
         .then(() => {
           this.newSong = null;
         });

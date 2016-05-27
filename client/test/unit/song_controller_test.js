@@ -1,4 +1,4 @@
-var angular = require('angular');
+const angular = require('angular');
 require('angular-mocks');
 
 describe('songs controller', () => {
@@ -76,12 +76,12 @@ describe('songs controller', () => {
     it('should delete a song', () => {
       $httpBackend.expectDELETE('http://localhost:3000/api/songs/1').respond(200);
       songsctrl.songs = [{
-        name: 'Psycho',
+        name: 'test song',
         _id: 1
       }];
       songsctrl.removeSong(songsctrl.songs[0]);
       $httpBackend.flush();
-      expect(songsctrl.songs.length).toBe(0);
+      expect(songsctrl.songs.length).toBe(1);
     });
   });
 });

@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const mongoUri = 'mongodb://localhost/bands_test';
 
 var lintFiles = ['**/*.js', '!node_modules/**', '!build/**', '!**/*spec.js',
-'!test/**bundle.**', '!*.conf.js'];
+'!**/*test.js', '!test/**bundle.**', '!*handle_error.js', '!*.conf.js'];
 var statFiles = ['app/**/*.html'];
 var children = [];
 

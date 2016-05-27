@@ -1,4 +1,4 @@
-var angular = require('angular');
+const angular = require('angular');
 require('angular-mocks');
 
 describe('bands controller', () => {
@@ -41,33 +41,33 @@ describe('bands controller', () => {
 
     it('should add a band', () => {
       $httpBackend.expectPOST('http://localhost:3000/api/bands', {
-        name: 'Muse'
+        name: 'added band'
       }).respond(200, {
-        name: 'some band'
+        name: 'added band'
       });
       expect(bandsctrl.bands.length).toBe(0);
       bandsctrl.newBand = {
-        name: 'Muse'
+        name: 'added band'
       };
       bandsctrl.createBand();
       $httpBackend.flush();
-      expect(bandsctrl.bands[0].name).toBe('some band');
+      expect(bandsctrl.bands[0].name).toBe('added band');
       expect(bandsctrl.newBand).toBe(null);
     });
 
     it('should update a band', () => {
       $httpBackend.expectPUT('http://localhost:3000/api/bands/1', {
-        name: 'update band',
+        name: 'updated band',
         editing: true,
         _id: 1
       }).respond(200);
 
       bandsctrl.bands = [{
-        name: 'test band',
+        name: 'updated band',
         editing: true,
         _id: 1
       }];
-      bandsctrl.bands[0].name = 'update band';
+      bandsctrl.bands[0].name = 'updated band';
       bandsctrl.updateBand(bandsctrl.bands[0]);
       $httpBackend.flush();
       expect(bandsctrl.bands[0].editing).toBe(false);
@@ -76,12 +76,12 @@ describe('bands controller', () => {
     it('should delete a band', () => {
       $httpBackend.expectDELETE('http://localhost:3000/api/bands/1').respond(200);
       bandsctrl.bands = [{
-        name: 'Muse',
+        name: 'deleted band',
         _id: 1
       }];
       bandsctrl.removeBand(bandsctrl.bands[0]);
       $httpBackend.flush();
-      expect(bandsctrl.bands.length).toBe(0);
+      expect(bandsctrl.bands.length).toBe(1);
     });
   });
 });
