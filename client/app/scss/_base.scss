@@ -1,0 +1,55 @@
+$h1size: 2.25em;
+$specColor: #5A6C7F;
+$artColor: #CBD1B1;
+$em: italic;
+
+body {
+  background-color: $specColor;
+}
+main {
+  margin-left: 20px;
+
+  ul {
+    p {
+      font-size: 1.25em;
+      margin-left: 15%;
+    }
+  }
+  section {
+    @include sectionStyle;
+
+    li {
+      margin-top: 5px;
+    }
+    p {
+      font-size: 1.25em;
+    }
+  }
+
+  article {
+    section {
+      @include articleStyle;
+    }
+    p {
+      font-size: 1em;
+    }
+  }
+}
+p {
+  padding: 5px;
+}
+button {
+  border-radius: 5px;
+}
+h1 {
+  font-size: $h1size;
+  text-align: center;
+}
+h3 {
+  font-size: 1.5em;
+  font-style: $em;
+  text-align: center;
+}
+footer {
+  @include footerStyle;
+}

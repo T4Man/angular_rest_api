@@ -1,0 +1,15 @@
+<form data-ng-submit="save(band)">
+  <label for="bandName">Band Name</label>
+  <input type="text" name="bandName" data-ng-model="band.bandName">
+
+  <label for="genre">Genre</label>
+  <input type="text" name="genre" data-ng-model="band.genre">
+
+  <button data-ng-if="band.editing" id='createBand' type="submit">{{ buttonText }}</button>
+  <ng-transclude></ng-transclude>
+
+  <div data-ng-controller="BandsController as bandCount">
+    <button data-ng-if="!band.editing" data-ng-click="bandCount.add()">Add Band</button>
+  </div>
+
+</form>

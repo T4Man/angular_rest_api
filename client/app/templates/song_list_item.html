@@ -1,0 +1,8 @@
+<li>
+  <ng-transclude></ng-transclude>
+  <p data-ng-if="!song.editing">{{song.title}} is performed by {{song.bandName}}.</p>
+  <button data-ng-if="!song.editing" data-ng-click="edit(song)">Edit</button>
+  <div data-ng-controller="SongsController as songCount">
+    <button data-ng-click="remove(song); songCount.minus()">Remove This Song</button>
+  </div>
+</li>
