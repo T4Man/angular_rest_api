@@ -1,5 +1,5 @@
 module.exports = function(app) {
-  app.factory('tfStore', ['$rootScope', function($rs) {
+  app.factory('tfStore', () => {
     return {
       count: 0,
       addCount: function() {
@@ -11,6 +11,6 @@ module.exports = function(app) {
       getCount: function() {
         return this.count;
       }
-    }
-  }]);
+    };
+  });
 };

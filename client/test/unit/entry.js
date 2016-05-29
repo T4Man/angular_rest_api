@@ -5,3 +5,4 @@ require('./band_controller_test');
 require('./song_controller_test');
 require('./handle_error_test');
 require('./factory_test');
+require('./tf_store_test');

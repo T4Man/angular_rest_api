@@ -51,6 +51,7 @@
 	__webpack_require__(23);
 	__webpack_require__(24);
 	__webpack_require__(25);
+	__webpack_require__(26);
 
 
 /***/ },
@@ -34038,7 +34039,7 @@
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
-	  app.factory('tfStore', ['$rootScope', function($rs) {
+	  app.factory('tfStore', () => {
 	    return {
 	      count: 0,
 	      addCount: function() {
@@ -34050,8 +34051,8 @@
 	      getCount: function() {
 	        return this.count;
 	      }
-	    }
-	  }]);
+	    };
+	  });
 	};
 
 
@@ -34655,6 +34656,37 @@
 	    expect(errorsArray.length).toBe(0);
 	    expect(songs.length).toBe(0);
 	  }));
+	});
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const angular = __webpack_require__(1);
+	
+	describe('store service', () => {
+	  beforeEach(angular.mock.module('angularApp'));
+	
+	  var tfStore;
+	  var $httpBackend;
+	
+	  beforeEach(angular.mock.inject(function(_$httpBackend_, tfStore) {
+	    $httpBackend = _$httpBackend_;
+	    Store = tfStore;
+	  }));
+	
+	  it('should be a service', () => {
+	    expect(typeof Store.addCount).toBe('function');
+	  });
+	
+	  it('should have a counter', () => {
+	    expect(Store.count).toBe(0);
+	    Store.addCount();
+	    expect(Store.count).toBe(1);
+	    Store.minusCount();
+	    expect(Store.count).toBe(1);
+	  });
 	});
 
 
