@@ -1,0 +1,10 @@
+$base_color: #0057B2;
+$active_color: #FFAB19;
+
+input {
+  font-size: 1.0em;
+  background-color: lighten($base_color, 50%);
+  &:focus {
+    background-color: $active_color;
+  }
+}

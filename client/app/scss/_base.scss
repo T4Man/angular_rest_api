@@ -1,0 +1,56 @@
+@function em($target, $context: 16) {
+  @return ($target / $context) * 1em;
+}
+
+$h1size: em(36);
+$specColor: #5A6C7F;
+$artColor: #CBD1B1;
+$bordColor: #0057B2;
+$em: italic;
+
+body {
+  background-color: $specColor;
+}
+main {
+  margin-left: 20px;
+
+  ul {
+    p {
+      font-size: em(20);
+      margin-left: 15%;
+    }
+  }
+  section {
+    @include sectionStyle;
+    }
+  article {
+    @include articleStyle;
+  }
+}
+
+p {
+  padding: 5px;
+}
+button {
+  border-radius: 5px;
+  border: solid 3px $bordColor;
+  margin: 1px;
+}
+h1 {
+  font-size: $h1size;
+  text-align: center;
+}
+h3 {
+  @extend h1;
+  color: $artColor;
+  background-color: #{#7CA3CB - #5A6C7F};
+  font-size: $h1size*0.7;
+  font-style: $em;
+  margin-top: 10px;
+}
+footer {
+  @include footerStyle;
+  section {
+    margin-top: 5px;
+  }
+}
