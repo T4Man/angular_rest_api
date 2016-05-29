@@ -1,9 +1,15 @@
 const baseUrl = require('../../config').baseUrl;
 
 module.exports = function(app) {
-  app.controller('BandsController', ['tfResource', function(SrcInfo) {
+  app.controller('BandsController', ['tfResource', 'tfStore', function(SrcInfo, tfStore) {
     this.bands = [];
+    this.genres = [];
     this.errors = [];
+    this.counter = tfStore;
+    this.getCount = tfStore.getCount.bind(tfStore);
+    this.add = tfStore.addCount.bind(tfStore);
+    this.minus = tfStore.minusCount.bind(tfStore);
+
     var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands');
     var original = {};
 

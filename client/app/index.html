@@ -11,6 +11,7 @@
     <h1>List Your Fav Bands and Songs</h1>
   </header>
   <main>
+
     <section data-ng-controller="BandsController as bandsctrl" data-ng-init="bandsctrl.getAll()">
 
       <band-form
@@ -51,6 +52,11 @@
           </song-form>
         </song-list-item>
       </ul>
+
+    </section>
+
+    <section data-ng-controller="SongsController as songCount">
+      <p>Number of items added on this visit: {{songCount.counter.count}}</p>
     </section>
 
     <article>

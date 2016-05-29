@@ -57,7 +57,7 @@
 	  it('adds a band', () => {
 	    browser.get('http://localhost:5000');
 	    element(by.model('band.bandName')).sendKeys('test band');
-	    element(by.id('createBand')).click();
+	    element(by.buttonText("Add Band")).click();
 	    var el = element(by.repeater('band in bandsctrl.bands').row(0).column('bandName'));
 	    el.getText().then((text) => {
 	      expect(text).toEqual('test band is a Rock band.');
@@ -95,7 +95,7 @@
 	  it('it should add a song', function () {
 	    browser.get('http://localhost:5000');
 	    element(by.model('song.title')).sendKeys('Rock and Roll');
-	    element(by.id('createSong')).click();
+	    element(by.buttonText("Add Song")).click();
 	    var el = element(by.repeater('song in songsctrl.songs').row(0).column('title'));
 	    el.getText().then((text) => {
 	      expect(text).toEqual('Rock and Roll is performed by a rock band.');

@@ -21,11 +21,17 @@ main {
     li {
       margin-top: 5px;
     }
+    p {
+      font-size: 1.25em;
+    }
   }
 
   article {
     section {
       @include articleStyle;
+    }
+    p {
+      font-size: 1em;
     }
   }
 }

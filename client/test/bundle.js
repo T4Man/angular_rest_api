@@ -47,10 +47,10 @@
 	angular = __webpack_require__(1);
 	__webpack_require__(3);
 	__webpack_require__(4);
-	__webpack_require__(21);
 	__webpack_require__(22);
 	__webpack_require__(23);
 	__webpack_require__(24);
+	__webpack_require__(25);
 
 
 /***/ },
@@ -33954,8 +33954,8 @@
 	const angularApp = angular.module('angularApp', []);
 	
 	__webpack_require__(5)(angularApp);
-	__webpack_require__(8)(angularApp);
-	__webpack_require__(15)(angularApp);
+	__webpack_require__(9)(angularApp);
+	__webpack_require__(16)(angularApp);
 
 
 /***/ },
@@ -33965,6 +33965,7 @@
 	module.exports = function(app) {
 	  __webpack_require__(6)(app);
 	  __webpack_require__(7)(app);
+	  __webpack_require__(8)(app);
 	};
 
 
@@ -34034,11 +34035,23 @@
 
 /***/ },
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = function(app) {
-	  __webpack_require__(9)(app);
-	  __webpack_require__(12)(app);
+	  app.factory('tfStore', ['$rootScope', function($rs) {
+	    return {
+	      count: 0,
+	      addCount: function() {
+	        this.count++;
+	      },
+	      minusCount: function() {
+	        this.count--;
+	      },
+	      getCount: function() {
+	        return this.count;
+	      }
+	    }
+	  }]);
 	};
 
 
@@ -34048,6 +34061,7 @@
 
 	module.exports = function(app) {
 	  __webpack_require__(10)(app);
+	  __webpack_require__(13)(app);
 	};
 
 
@@ -34055,12 +34069,27 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const baseUrl = __webpack_require__(11).baseUrl;
+	module.exports = function(app) {
+	  __webpack_require__(11)(app);
+	};
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const baseUrl = __webpack_require__(12).baseUrl;
 	
 	module.exports = function(app) {
-	  app.controller('BandsController', ['tfResource', function(SrcInfo) {
+	  app.controller('BandsController', ['tfResource', 'tfStore', function(SrcInfo, tfStore) {
 	    this.bands = [];
+	    this.genres = [];
 	    this.errors = [];
+	    this.counter = tfStore;
+	    this.getCount = tfStore.getCount.bind(tfStore);
+	    this.add = tfStore.addCount.bind(tfStore);
+	    this.minus = tfStore.minusCount.bind(tfStore);
+	
 	    var remote = new SrcInfo(this.bands, this.errors, baseUrl + '/api/bands');
 	    var original = {};
 	
@@ -34098,7 +34127,7 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -34107,17 +34136,17 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(13)(app);
 	  __webpack_require__(14)(app);
+	  __webpack_require__(15)(app);
 	};
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34141,7 +34170,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34169,21 +34198,12 @@
 
 
 /***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(app) {
-	  __webpack_require__(16)(app);
-	  __webpack_require__(18)(app);
-	};
-
-
-/***/ },
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
 	  __webpack_require__(17)(app);
+	  __webpack_require__(19)(app);
 	};
 
 
@@ -34191,14 +34211,29 @@
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const baseUrl = __webpack_require__(11).baseUrl;
+	module.exports = function(app) {
+	  __webpack_require__(18)(app);
+	  // require('./count_controller')(app);
+	};
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const baseUrl = __webpack_require__(12).baseUrl;
 	
 	module.exports = function(app) {
-	  app.controller('SongsController', ['tfResource', function(Resource) {
+	  app.controller('SongsController', ['tfResource', 'tfStore', function(SrcInfo, tfStore) {
 	    this.songs = [];
 	    this.bands = [];
 	    this.errors = [];
-	    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs');
+	    this.counter = tfStore;
+	    this.getCount = tfStore.getCount.bind(tfStore);
+	    this.add = tfStore.addCount.bind(tfStore);
+	    this.minus = tfStore.minusCount.bind(tfStore);
+	
+	    var remote = new SrcInfo(this.songs, this.errors, baseUrl + '/api/songs');
 	    var original = {};
 	
 	    this.getAll = remote.getAll.bind(remote);
@@ -34236,17 +34271,17 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(19)(app);
 	  __webpack_require__(20)(app);
+	  __webpack_require__(21)(app);
 	};
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34270,7 +34305,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -34298,7 +34333,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	const angular = __webpack_require__(1);
@@ -34391,7 +34426,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	const angular = __webpack_require__(1);
@@ -34484,7 +34519,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var angular = __webpack_require__(1);
@@ -34508,7 +34543,7 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	const angular = __webpack_require__(1);

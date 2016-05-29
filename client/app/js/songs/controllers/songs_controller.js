@@ -1,11 +1,16 @@
 const baseUrl = require('../../config').baseUrl;
 
 module.exports = function(app) {
-  app.controller('SongsController', ['tfResource', function(Resource) {
+  app.controller('SongsController', ['tfResource', 'tfStore', function(SrcInfo, tfStore) {
     this.songs = [];
     this.bands = [];
     this.errors = [];
-    var remote = new Resource(this.songs, this.errors, baseUrl + '/api/songs');
+    this.counter = tfStore;
+    this.getCount = tfStore.getCount.bind(tfStore);
+    this.add = tfStore.addCount.bind(tfStore);
+    this.minus = tfStore.minusCount.bind(tfStore);
+
+    var remote = new SrcInfo(this.songs, this.errors, baseUrl + '/api/songs');
     var original = {};
 
     this.getAll = remote.getAll.bind(remote);
