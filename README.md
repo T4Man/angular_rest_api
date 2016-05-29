@@ -1,4 +1,4 @@
-#Angular Two Resource REST API
+#Add Communication Service to Angular Two Resource REST API
 ##Assignment for Code Fellows 401
 
 ##To start this application
@@ -15,6 +15,8 @@
 5. Enter the name and genre of your favorite band and click 'Create Band'
 6. Use the 'edit' or 'delete' buttons below the list item to modify your entry.
 7. Repeat the process in the 'Song' section to add your songs.
+8. Each entry (band or song) will add to the counter. Removing a band or song will
+subtract from the counter. The counter will reset to zero on a new visit (page refresh). 
 
 This is a C(reate) R(ead) U(pdate) D(estroy) interface for a two resource JSON api using Angular with a MongoDB back-end. Express is used for the client-side and
 back-end servers.
